@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Suvarna Bar & Permit Rooms | Complete Management System</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #0f0a07 0%, #1e1510 100%);
+      font-family: 'Poppins', sans-serif;
+      color: #f5ede4;
+      padding: 1.5rem;
+    }
+    .container { max-width: 1600px; margin: 0 auto; }
+    .hero { text-align: center; margin-bottom: 1.5rem; }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #f9e0b0, #e4b17c, #c97e4a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero .tagline { font-size: 0.8rem; color: #d4b48c; }
+    .admin-panel {
+      background: linear-gradient(135deg, #2a241f, #1f1914);
+      border-radius: 1.5rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid #c97e4a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .admin-status { display: flex; align-items: center; gap: 1rem; }
+    .admin-badge {
+      background: #c97e4a;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #1a120b;
+    }
+    .admin-controls { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+    .admin-btn {
+      background: #3e2b1f;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      color: #ffd7a5;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .admin-btn:hover { transform: scale(1.02); background: #b55a2a; }
+    .password-input {
+      background: #2a1d14;
+      border: 1px solid #c97e4a;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      color: white;
+      outline: none;
+    }
+    /* Tally Section */
+    .tally-container {
+      background: linear-gradient(135deg, #1e1610, #18100b);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid #c97e4a;
+    }
+    .tally-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #c97e4a;
+    }
+    .tally-header h2 { font-size: 1.2rem; color: #ecc197; }
+    .tally-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .tally-card {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 1rem;
+      padding: 0.8rem;
+      text-align: center;
+      border: 1px solid rgba(201, 126, 74, 0.3);
+    }
+    .tally-card h3 { font-size: 0.75rem; color: #b59272; }
+    .tally-card .amount { font-size: 1.3rem; font-weight: 700; color: #c97e4a; }
+    .tally-card .profit { color: #4caf50; }
+    .tally-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.7rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .tally-table th, .tally-table td { padding: 0.6rem; text-align: center; border-bottom: 1px solid rgba(212, 180, 140, 0.2); }
+    .tally-table th { background: #2a1d14; }
+    .profit-text { color: #4caf50; font-weight: bold; }
+    .date-filter { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+    .date-filter input, .btn-small {
+      background: #2a1d14;
+      border: 1px solid #c97e4a;
+      padding: 0.4rem 0.8rem;
+      border-radius: 40px;
+      color: white;
+    }
+    .btn-small { background: #c97e4a; color: #1a120b; cursor: pointer; font-weight: 600; }
+    /* Tables Container */
+    .tables-container {
+      background: linear-gradient(135deg, #1e1610, #18100b);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid #c97e4a;
+    }
+    .tables-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.8rem; color: #ecc197; }
+    .tables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.6rem;
+    }
+    .table-box {
+      background: #2a1d14;
+      border: 2px solid rgba(212, 180, 140, 0.3);
+      border-radius: 0.8rem;
+      padding: 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .table-box:hover { transform: translateY(-2px); border-color: #c97e4a; background: #3e2b1f; }
+    .table-box.active { background: #c97e4a; border-color: #c97e4a; color: #1a120b; }
+    .table-number { font-size: 0.9rem; font-weight: 700; }
+    .table-badge { font-size: 0.6rem; margin-top: 0.2rem; opacity: 0.8; }
+    /* Search & Filter */
+    .search-container { margin-bottom: 1rem; display: flex; justify-content: center; }
+    .search-box {
+      background: rgba(30, 20, 15, 0.8);
+      border: 1px solid rgba(212, 180, 140, 0.4);
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .search-box input { background: transparent; border: none; outline: none; color: white; width: 100%; }
+    .search-box input::placeholder { color: #b59272; }
+    .clear-search { background: none; border: none; color: #b59272; cursor: pointer; }
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .filter-btn {
+      background: rgba(30, 20, 15, 0.7);
+      border: 1px solid rgba(212, 180, 140, 0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      color: #f0dfce;
+      cursor: pointer;
+    }
+    .filter-btn:hover, .filter-btn.active { background: #c97e4a; color: #1a120b; }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+    .section-card {
+      background: rgba(25, 18, 12, 0.85);
+      border-radius: 1.2rem;
+      padding: 1rem;
+      border: 1px solid rgba(212, 180, 140, 0.25);
+    }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-left: 3px solid #c97e4a;
+      padding-left: 0.8rem;
+    }
+    .table-wrapper { overflow-x: auto; }
+    .drink-table, .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.7rem;
+      background: rgba(20, 14, 10, 0.7);
+      border-radius: 0.8rem;
+      overflow: hidden;
+    }
+    .drink-table th, .order-table th {
+      background: #2a1d14;
+      padding: 0.6rem 0.4rem;
+      text-align: left;
+      font-size: 0.65rem;
+    }
+    .drink-table td, .order-table td {
+      padding: 0.5rem 0.4rem;
+      border-bottom: 1px solid rgba(212, 180, 140, 0.2);
+    }
+    .order-now-btn {
+      background: #c97e4a;
+      border: none;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      color: #1a120b;
+      font-weight: 600;
+      font-size: 0.65rem;
+      cursor: pointer;
+    }
+    .badge-category {
+      background: #352418;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.6rem;
+      color: #ecc197;
+    }
+    .low-stock { color: #ff8a5c; font-weight: bold; }
+    .out-stock { color: #ff5555; text-decoration: line-through; }
+    .stock-control { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .stock-btn, .rate-edit-btn {
+      background: #3e2b1f;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      color: #ffd7a5;
+      cursor: pointer;
+      font-size: 0.7rem;
+    }
+    .order-card {
+      background: linear-gradient(135deg, #1e1610, #18100b);
+      border-radius: 1.2rem;
+      padding: 1rem;
+      border: 2px solid #c97e4a;
+      position: sticky;
+      top: 1rem;
+    }
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #c97e4a;
+    }
+    .order-total {
+      background: #c97e4a;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      color: #1a120b;
+      font-weight: 700;
+    }
+    .qty-control { display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .qty-btn {
+      background: #c97e4a;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .remove-item {
+      background: #8b3c1c;
+      border: none;
+      padding: 0.2rem 0.4rem;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 0.6rem;
+      color: white;
+    }
+    .bill-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.8rem; }
+    .btn-primary, .btn-secondary {
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.7rem;
+    }
+    .btn-primary { background: #c97e4a; border: none; }
+    .btn-secondary { background: #5a3a2a; border: none; color: white; }
+    .empty-order { text-align: center; padding: 1rem; color: #a28264; }
+    .bill-history { margin-top: 0.8rem; background: rgba(0, 0, 0, 0.3); border-radius: 0.8rem; padding: 0.5rem; }
+    .history-list { display: flex; flex-direction: column; gap: 0.2rem; max-height: 120px; overflow-y: auto; }
+    .history-item {
+      background: #2a1d14;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.6rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+    .photo-card {
+      background: #221a14;
+      border-radius: 0.8rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(212, 180, 140, 0.3);
+    }
+    .photo-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+    .photo-info { padding: 0.3rem; text-align: center; }
+    .photo-info h4 { font-size: 0.7rem; }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+    }
+    .modal.active { display: flex; }
+    .invoice-container {
+      background: #fff8f0;
+      color: #2c241a;
+      max-width: 450px;
+      width: 90%;
+      border-radius: 1rem;
+      padding: 1rem;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .invoice-header { text-align: center; border-bottom: 2px solid #c97e4a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    .invoice-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+    .invoice-table th, .invoice-table td { border-bottom: 1px solid #ddd; padding: 0.3rem; text-align: left; }
+    .invoice-total { text-align: right; font-size: 1rem; font-weight: bold; margin-top: 0.8rem; padding-top: 0.3rem; border-top: 2px solid #c97e4a; }
+    .close-modal { background: #c97e4a; border: none; padding: 0.4rem; border-radius: 30px; cursor: pointer; margin-top: 0.8rem; width: 100%; }
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox-img { max-width: 90vw; max-height: 85vh; border-radius: 20px; }
+    .footer-note { text-align: center; margin-top: 1rem; font-size: 0.65rem; color: #b59272; }
+    .rate-edit-input {
+      background: #2a1d14;
+      border: 1px solid #c97e4a;
+      color: white;
+      width: 60px;
+      padding: 0.2rem;
+      border-radius: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="hero">
+    <h1><i class="fas fa-chart-line"></i> Suvarna Bar & Permit Rooms</h1>
+    <div class="tagline">Admin Stock & Rate Management · Daily Tally (30% Profit Margin)</div>
+  </div>
+
+  <div class="admin-panel">
+    <div class="admin-status"><i class="fas fa-user-lock" style="color:#c97e4a;"></i><span id="admin-status-text" class="admin-badge">👤 User Mode</span></div>
+    <div class="admin-controls">
+      <input type="password" id="admin-password" class="password-input" placeholder="Admin password" autocomplete="off">
+      <button id="admin-login-btn" class="admin-btn"><i class="fas fa-key"></i> Login as Admin</button>
+      <button id="admin-logout-btn" class="admin-btn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+
+  <!-- TALLY SECTION -->
+  <div class="tally-container">
+    <div class="tally-header">
+      <h2><i class="fas fa-calculator"></i> Daily & Monthly Tally (30% Profit Margin)</h2>
+      <div class="date-filter">
+        <input type="date" id="tally-date"><button id="view-date-tally" class="btn-small">View Daily</button>
+        <button id="view-month-tally" class="btn-small">Current Month</button>
+      </div>
+    </div>
+    <div class="tally-stats" id="tally-stats"></div>
+    <div class="table-wrapper">
+      <table class="tally-table"><thead><tr><th>Date</th><th>Hours</th><th>Bills</th><th>Revenue</th><th>Cost (70%)</th><th>Profit (30%)</th><th>Margin</th></tr></thead>
+      <tbody id="tally-table-body"></tbody></table>
+    </div>
+  </div>
+
+  <!-- 15 TABLES -->
+  <div class="tables-container">
+    <div class="tables-title"><i class="fas fa-chair"></i> Select Table Number</div>
+    <div class="tables-grid" id="tables-grid"></div>
+  </div>
+
+  <!-- SEARCH & FILTER -->
+  <div class="search-container"><div class="search-box"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Search items..."><button class="clear-search" id="clear-search" style="display:none;"><i class="fas fa-times-circle"></i></button></div></div>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="Whisky">Whisky</button><button class="filter-btn" data-filter="Vodka">Vodka</button>
+    <button class="filter-btn" data-filter="Beer">Beer</button><button class="filter-btn" data-filter="Rum">Rum</button>
+    <button class="filter-btn" data-filter="Wine">Wine</button><button class="filter-btn" data-filter="Cold Drink">Cold Drink</button>
+    <button class="filter-btn" data-filter="Energy Drink">Energy</button><button class="filter-btn" data-filter="Snacks">Snacks</button>
+  </div>
+
+  <div class="main-grid">
+    <div class="section-card">
+      <div class="section-title"><i class="fas fa-table-list"></i> Beverage Inventory <span>(Admin can edit stock & rates)</span></div>
+      <div class="table-wrapper">
+        <table class="drink-table"><thead><tr><th>#</th><th>Item</th><th>Category</th><th>Size</th><th>Rate (₹)</th><th>Stock</th><th>Actions</th></tr></thead>
+        <tbody id="inventory-table-body"></tbody></table>
+      </div>
+    </div>
+
+    <div class="order-card">
+      <div class="order-header"><h2><i class="fas fa-receipt"></i> Table <span id="current-table-display">1</span> Order</h2><div class="order-total">₹ <span id="order-total-amount">0</span></div></div>
+      <div id="order-items-container"><table class="order-table"><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Amount</th><th></th></tr></thead><tbody id="order-table-body"></tbody></table></div>
+      <div id="empty-order-msg" class="empty-order"><i class="fas fa-shopping-cart"></i> No items<br>Click ORDER NOW</div>
+      <div class="bill-actions"><button id="generate-bill-btn" class="btn-primary" disabled>Generate Bill</button><button id="clear-order-btn" class="btn-secondary">Clear Order</button></div>
+      <div class="bill-history"><h4>Bill History</h4><div id="history-list" class="history-list"></div></div>
+    </div>
+  </div>
+
+  <div class="section-card"><div class="section-title"><i class="fas fa-images"></i> Gallery</div><div class="gallery-grid" id="gallery-grid"></div></div>
+  <div class="footer-note"><i class="fas fa-shield-alt"></i> Admin only: Modify stock & rates | 30% profit margin on all items</div>
+</div>
+
+<div id="invoice-modal" class="modal"><div id="invoice-content" class="invoice-container"></div></div>
+<div id="lightbox" class="lightbox"><img class="lightbox-img" id="lightbox-img"></div>
+
+<script>
+  const ADMIN_PASSWORD = "admin123";
+  let isAdmin = false;
+  let currentFilter = 'all';
+  let currentTable = 1;
+  let searchQuery = '';
+  let allBills = JSON.parse(localStorage.getItem('suvarnaAllBills')) || [];
+  const PROFIT_MARGIN = 0.30;
+  const COST_MARGIN = 0.70;
+
+  // MASTER BEVERAGES
+  const MASTER_BEVERAGES = [
+    { id: 0, name: "BLACK DOG CENTENARY", category: "Whisky", size: "180 ML", rate: 611, img: "https://images.pexels.com/photos/602750/pexels-photo-602750.jpeg" },
+    { id: 1, name: "OAKSMITH GOLD", category: "Whisky", size: "180 ML", rate: 384, img: "https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg" },
+    { id: 2, name: "OAKSMITH INTERNATIONAL", category: "Whisky", size: "180 ML", rate: 317, img: "https://images.pexels.com/photos/1582482/pexels-photo-1582482.jpeg" },
+    { id: 3, name: "SMIRNOFF VODKA", category: "Vodka", size: "180 ML", rate: 374, img: "https://images.pexels.com/photos/1707919/pexels-photo-1707919.jpeg" },
+    { id: 4, name: "SIGNATURE RARE WHISKY", category: "Whisky", size: "180 ML", rate: 365, img: "https://images.pexels.com/photos/159291/whiskey-glass-alcohol-drink-159291.jpeg" },
+    { id: 5, name: "BLENDERS PRIDE", category: "Whisky", size: "180 ML", rate: 365, img: "https://images.pexels.com/photos/372959/pexels-photo-372959.jpeg" },
+    { id: 6, name: "BLENDERS PRIDE RESERVE", category: "Whisky", size: "180 ML", rate: 403, img: "https://images.pexels.com/photos/602750/pexels-photo-602750.jpeg" },
+    { id: 7, name: "GRAND MASTER CRANBERRY", category: "Vodka", size: "180 ML", rate: 350, img: "https://images.pexels.com/photos/5947019/pexels-photo-5947019.jpeg" },
+    { id: 8, name: "GRAND MASTER MANGO", category: "Vodka", size: "180 ML", rate: 350, img: "https://images.pexels.com/photos/5947019/pexels-photo-5947019.jpeg" },
+    { id: 9, name: "ROMANOV APPLE VODKA", category: "Vodka", size: "180 ML", rate: 270, img: "https://images.pexels.com/photos/6644474/pexels-photo-6644474.jpeg" },
+    { id: 10, name: "ROMANOV VODKA", category: "Vodka", size: "180 ML", rate: 270, img: "https://images.pexels.com/photos/46182/vodka-bottle-alcohol-drink-46182.jpeg" },
+    { id: 11, name: "WHITE MISCHIEF VODKA", category: "Vodka", size: "180 ML", rate: 259, img: "https://images.pexels.com/photos/6644474/pexels-photo-6644474.jpeg" },
+    { id: 12, name: "GREEN LABEL CLASSIC", category: "Whisky", size: "180 ML", rate: 211, img: "https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg" },
+    { id: 13, name: "LITTLE LITTLE VODKA", category: "Vodka", size: "150 ML", rate: 200, img: "https://images.pexels.com/photos/5947019/pexels-photo-5947019.jpeg" },
+    { id: 14, name: "ROYAL STAG BARREL", category: "Whisky", size: "180 ML", rate: 350, img: "https://images.pexels.com/photos/1582482/pexels-photo-1582482.jpeg" },
+    { id: 15, name: "AMBER FINE WHISKY", category: "Whisky", size: "180 ML", rate: 200, img: "https://images.pexels.com/photos/602750/pexels-photo-602750.jpeg" },
+    { id: 16, name: "IMPERIAL BLUE", category: "Whisky", size: "180 ML", rate: 270, img: "https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg" },
+    { id: 17, name: "DSP BLACK WHISKY", category: "Whisky", size: "180 ML", rate: 260, img: "https://images.pexels.com/photos/1582482/pexels-photo-1582482.jpeg" },
+    { id: 18, name: "DSP WHISKY", category: "Whisky", size: "180 ML", rate: 260, img: "https://images.pexels.com/photos/159291/whiskey-glass-alcohol-drink-159291.jpeg" },
+    { id: 19, name: "BAGPIPER WHISKY", category: "Whisky", size: "180 ML", rate: 202, img: "https://images.pexels.com/photos/372959/pexels-photo-372959.jpeg" },
+    { id: 20, name: "ROYAL CHALLENGE", category: "Whisky", size: "180 ML", rate: 300, img: "https://images.pexels.com/photos/602750/pexels-photo-602750.jpeg" },
+    { id: 21, name: "MCD WHISKY", category: "Whisky", size: "180 ML", rate: 260, img: "https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg" },
+    { id: 22, name: "ROYAL STAG", category: "Whisky", size: "180 ML", rate: 300, img: "https://images.pexels.com/photos/1582482/pexels-photo-1582482.jpeg" },
+    { id: 23, name: "BACARDI BLACK RUM", category: "Rum", size: "180 ML", rate: 240, img: "https://images.pexels.com/photos/1283215/pexels-photo-1283215.jpeg" },
+    { id: 24, name: "MCD RUM", category: "Rum", size: "180 ML", rate: 197, img: "https://images.pexels.com/photos/1283215/pexels-photo-1283215.jpeg" },
+    { id: 25, name: "OLD MONK RUM", category: "Rum", size: "180 ML", rate: 250, img: "https://images.pexels.com/photos/1366893/pexels-photo-1366893.jpeg" },
+    { id: 26, name: "ICONIQ WHITE", category: "Whisky", size: "180 ML", rate: 221, img: "https://images.pexels.com/photos/372959/pexels-photo-372959.jpeg" },
+    { id: 27, name: "MUMBAI MALT", category: "Whisky", size: "180 ML", rate: 200, img: "https://images.pexels.com/photos/602750/pexels-photo-602750.jpeg" },
+    { id: 28, name: "MASTER DELIGHT", category: "Whisky", size: "180 ML", rate: 200, img: "https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg" },
+    { id: 29, name: "TUBORG STRONG", category: "Beer", size: "650 ML", rate: 250, img: "https://images.pexels.com/photos/1267703/pexels-photo-1267703.jpeg" },
+    { id: 30, name: "BUDWEISER MAGNUM", category: "Beer", size: "650 ML", rate: 300, img: "https://images.pexels.com/photos/1552630/pexels-photo-1552630.jpeg" },
+    { id: 31, name: "CARLSBERG ELEPHANT", category: "Beer", size: "650 ML", rate: 300, img: "https://images.pexels.com/photos/1219147/pexels-photo-1219147.jpeg" },
+    { id: 32, name: "KINGFISHER STRONG", category: "Beer", size: "650 ML", rate: 250, img: "https://images.pexels.com/photos/1267703/pexels-photo-1267703.jpeg" },
+    { id: 33, name: "LONDON PILSNER", category: "Beer", size: "650 ML", rate: 200, img: "https://images.pexels.com/photos/1552630/pexels-photo-1552630.jpeg" },
+    { id: 34, name: "BUDWEISER PREMIUM", category: "Beer", size: "650 ML", rate: 300, img: "https://images.pexels.com/photos/1219147/pexels-photo-1219147.jpeg" },
+    { id: 35, name: "PORT 1000 WINE", category: "Wine", size: "375 ML", rate: 165, img: "https://images.pexels.com/photos/1407846/pexels-photo-1407846.jpeg" },
+    { id: 36, name: "COCA COLA", category: "Cold Drink", size: "750 ML", rate: 60, img: "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg" },
+    { id: 37, name: "THUMBS UP", category: "Cold Drink", size: "750 ML", rate: 60, img: "https://images.pexels.com/photos/2775860/pexels-photo-2775860.jpeg" },
+    { id: 38, name: "SPRITE", category: "Cold Drink", size: "750 ML", rate: 60, img: "https://images.pexels.com/photos/2775860/pexels-photo-2775860.jpeg" },
+    { id: 39, name: "RED BULL", category: "Energy Drink", size: "250 ML", rate: 140, img: "https://images.pexels.com/photos/1293265/pexels-photo-1293265.jpeg" },
+    { id: 40, name: "SNACKS", category: "Snacks", size: "1 Plate", rate: 10, img: "https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg" }
+  ];
+
+  let beverages = [];
+  let tableOrders = {};
+  let billHistory = {};
+
+  function loadStockData() {
+    const savedStock = localStorage.getItem('suvarnaStockData');
+    const savedRates = localStorage.getItem('suvarnaRateData');
+    if (savedStock) {
+      const stockMap = JSON.parse(savedStock);
+      beverages = MASTER_BEVERAGES.map(b => ({ ...b, stock: stockMap[b.id] !== undefined ? stockMap[b.id] : 50 }));
+    } else {
+      beverages = MASTER_BEVERAGES.map(b => ({ ...b, stock: 50 }));
+    }
+    if (savedRates) {
+      const rateMap = JSON.parse(savedRates);
+      beverages = beverages.map(b => ({ ...b, rate: rateMap[b.id] !== undefined ? rateMap[b.id] : b.rate }));
+    }
+    saveStockData();
+    saveRateData();
+  }
+
+  function saveStockData() {
+    const stockMap = {};
+    beverages.forEach(b => { stockMap[b.id] = b.stock; });
+    localStorage.setItem('suvarnaStockData', JSON.stringify(stockMap));
+  }
+
+  function saveRateData() {
+    const rateMap = {};
+    beverages.forEach(b => { rateMap[b.id] = b.rate; });
+    localStorage.setItem('suvarnaRateData', JSON.stringify(rateMap));
+  }
+
+  function updateStock(itemId, delta) {
+    if (!isAdmin) { alert("Only admin can modify stock!"); return false; }
+    const drink = beverages.find(b => b.id === itemId);
+    if (drink) { drink.stock = Math.max(0, drink.stock + delta); saveStockData(); updateAllUI(); return true; }
+    return false;
+  }
+
+  function updateRate(itemId, newRate) {
+    if (!isAdmin) { alert("Only admin can modify rates!"); return false; }
+    const drink = beverages.find(b => b.id === itemId);
+    if (drink && newRate > 0) { drink.rate = newRate; saveRateData(); updateAllUI(); return true; }
+    return false;
+  }
+
+  function saveBill(billData) {
+    const now = new Date();
+    const hours = now.getHours();
+    billData.timestamp = now.toISOString();
+    billData.fullDate = now.toLocaleDateString('en-CA');
+    billData.outsideHours = !(hours >= 10 && hours <= 23);
+    allBills.push(billData);
+    localStorage.setItem('suvarnaAllBills', JSON.stringify(allBills));
+  }
+
+  function getDailyTally(dateStr) {
+    const dayBills = allBills.filter(b => b.fullDate === dateStr && !b.outsideHours);
+    const totalRevenue = dayBills.reduce((s, b) => s + b.total, 0);
+    return { totalRevenue, totalCost: totalRevenue * COST_MARGIN, totalProfit: totalRevenue * PROFIT_MARGIN, totalBills: dayBills.length, margin: PROFIT_MARGIN * 100 };
+  }
+
+  function getAllDailySummaries() {
+    const dates = [...new Set(allBills.filter(b => !b.outsideHours).map(b => b.fullDate))].sort().reverse();
+    return dates.map(date => ({ date, ...getDailyTally(date) }));
+  }
+
+  function renderTally(date = null) {
+    const targetDate = date || new Date().toLocaleDateString('en-CA');
+    const daily = getDailyTally(targetDate);
+    const monthlyBills = allBills.filter(b => b.fullDate?.startsWith(new Date().toISOString().slice(0,7)) && !b.outsideHours);
+    const monthlyRevenue = monthlyBills.reduce((s, b) => s + b.total, 0);
+    document.getElementById('tally-stats').innerHTML = `
+      <div class="tally-card"><h3>Daily Revenue</h3><div class="amount">₹${daily.totalRevenue}</div><small>${daily.totalBills} bills</small></div>
+      <div class="tally-card"><h3>Daily Profit (30%)</h3><div class="amount profit">₹${daily.totalProfit}</div></div>
+      <div class="tally-card"><h3>Monthly Revenue</h3><div class="amount">₹${monthlyRevenue}</div><small>${monthlyBills.length} bills</small></div>
+      <div class="tally-card"><h3>Monthly Profit (30%)</h3><div class="amount profit">₹${Math.round(monthlyRevenue * PROFIT_MARGIN)}</div></div>`;
+    const tbody = document.getElementById('tally-table-body');
+    const summaries = getAllDailySummaries();
+    if (summaries.length === 0) { tbody.innerHTML = '<tr><td colspan="7">No bills yet</td></tr>'; return; }
+    tbody.innerHTML = summaries.map(s => `<tr><td>${s.date}</td><td>10AM-11:59PM</td><td>${s.totalBills}</td><td>₹${s.totalRevenue}</td><td>₹${s.totalCost}</td><td class="profit-text">₹${s.totalProfit}</td><td>${s.margin}%</td></tr>`).join('');
+  }
+
+  // Order Management
+  function addToOrder(itemId, qty = 1) {
+    const drink = beverages.find(b => b.id === itemId);
+    if (!drink || drink.stock < qty) { alert(`Only ${drink?.stock || 0} left!`); return; }
+    let order = tableOrders[currentTable] || [];
+    const existing = order.find(i => i.id === itemId);
+    if (existing) { existing.qty += qty; }
+    else { order.push({ id: drink.id, name: drink.name, rate: drink.rate, qty }); }
+    drink.stock -= qty;
+    tableOrders[currentTable] = order;
+    saveStockData();
+    saveTableData();
+    updateAllUI();
+  }
+
+  function updateOrderQuantity(itemId, newQty) {
+    let order = tableOrders[currentTable] || [];
+    const orderItem = order.find(i => i.id === itemId);
+    const drink = beverages.find(b => b.id === itemId);
+    if (!orderItem || !drink) return;
+    if (newQty <= 0) {
+      drink.stock += orderItem.qty;
+      order = order.filter(i => i.id !== itemId);
+    } else {
+      const delta = newQty - orderItem.qty;
+      if (delta > 0 && drink.stock < delta) { alert(`Only ${drink.stock} left`); return; }
+      drink.stock -= delta;
+      orderItem.qty = newQty;
+    }
+    tableOrders[currentTable] = order;
+    saveStockData();
+    saveTableData();
+    updateAllUI();
+  }
+
+  function removeOrderItem(itemId) {
+    let order = tableOrders[currentTable] || [];
+    const orderItem = order.find(i => i.id === itemId);
+    if (orderItem) {
+      const drink = beverages.find(b => b.id === itemId);
+      if (drink) drink.stock += orderItem.qty;
+      order = order.filter(i => i.id !== itemId);
+      tableOrders[currentTable] = order;
+      saveStockData();
+      saveTableData();
+      updateAllUI();
+    }
+  }
+
+  function clearCurrentOrder() {
+    const order = tableOrders[currentTable] || [];
+    order.forEach(item => {
+      const drink = beverages.find(b => b.id === item.id);
+      if (drink) drink.stock += item.qty;
+    });
+    tableOrders[currentTable] = [];
+    saveStockData();
+    saveTableData();
+    updateAllUI();
+  }
+
+  function generateBill() {
+    const order = tableOrders[currentTable] || [];
+    if (order.length === 0) { alert("No items in order!"); return; }
+    const total = order.reduce((s, i) => s + (i.rate * i.qty), 0);
+    const now = new Date();
+    const billNo = `T${currentTable}-${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}-${Math.floor(Math.random()*1000)}`;
+    const billData = { billNo, date: now.toLocaleString(), fullDate: now.toLocaleDateString('en-CA'), items: [...order], total, tableNo: currentTable };
+    saveBill(billData);
+    if (!billHistory[currentTable]) billHistory[currentTable] = [];
+    billHistory[currentTable].unshift(billData);
+    saveTableData();
+    let itemsHtml = order.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.rate}</td><td>₹${i.rate * i.qty}</td></tr>`).join('');
+    const invoiceHtml = `<div class="invoice-header"><h2>Suvarna Bar</h2><p>Table ${currentTable}</p></div><div><p>Bill No: ${billNo}</p><p>${now.toLocaleString()}</p></div><table class="invoice-table"><thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${itemsHtml}</tbody></table><div class="invoice-total">Total: ₹${total}</div><button class="close-modal" id="closeInvoice">Close</button>`;
+    document.getElementById('invoice-content').innerHTML = invoiceHtml;
+    document.getElementById('invoice-modal').classList.add('active');
+    document.getElementById('closeInvoice').onclick = () => document.getElementById('invoice-modal').classList.remove('active');
+    tableOrders[currentTable] = [];
+    saveTableData();
+    updateAllUI();
+    renderTally();
+  }
+
+  function renderInventory() {
+    let filtered = beverages.filter(b => currentFilter === 'all' || b.category === currentFilter);
+    if (searchQuery) filtered = filtered.filter(b => b.name.toLowerCase().includes(searchQuery) || b.category.toLowerCase().includes(searchQuery));
+    const tbody = document.getElementById('inventory-table-body');
+    tbody.innerHTML = filtered.map((d, idx) => `<tr><td>${idx+1}</td><td>${d.name}</td><td><span class="badge-category">${d.category}</span></td><td>${d.size || '-'}</td><td>${isAdmin ? `<input type="number" class="rate-edit-input" data-id="${d.id}" value="${d.rate}" step="1" style="width:70px;">` : `₹${d.rate}`}</td><td class="${d.stock === 0 ? 'out-stock' : (d.stock < 10 ? 'low-stock' : '')}">${d.stock}</td><td><button class="order-now-btn" data-id="${d.id}">ORDER NOW</button>${isAdmin ? `<div class="stock-control" style="margin-top:5px;"><button class="stock-btn dec-stock" data-id="${d.id}">-</button><span>✏️</span><button class="stock-btn inc-stock" data-id="${d.id}">+</button></div>` : ''}</td></tr>`).join('');
+    document.querySelectorAll('.order-now-btn').forEach(btn => btn.addEventListener('click', () => addToOrder(parseInt(btn.dataset.id), 1)));
+    if (isAdmin) {
+      document.querySelectorAll('.dec-stock').forEach(btn => btn.addEventListener('click', () => updateStock(parseInt(btn.dataset.id), -1)));
+      document.querySelectorAll('.inc-stock').forEach(btn => btn.addEventListener('click', () => updateStock(parseInt(btn.dataset.id), 1)));
+      document.querySelectorAll('.rate-edit-input').forEach(inp => inp.addEventListener('change', (e) => updateRate(parseInt(inp.dataset.id), parseInt(inp.value))));
+    }
+  }
+
+  function renderOrder() {
+    const order = tableOrders[currentTable] || [];
+    const tbody = document.getElementById('order-table-body');
+    const emptyMsg = document.getElementById('empty-order-msg');
+    const totalSpan = document.getElementById('order-total-amount');
+    const genBtn = document.getElementById('generate-bill-btn');
+    if (order.length === 0) { tbody.innerHTML = ''; emptyMsg.style.display = 'block'; totalSpan.innerText = '0'; genBtn.disabled = true; return; }
+    emptyMsg.style.display = 'none'; genBtn.disabled = false;
+    let total = 0;
+    tbody.innerHTML = order.map(item => { total += item.rate * item.qty; return `<tr><td>${item.name}</td><td><div class="qty-control"><button class="qty-btn dec-order" data-id="${item.id}">-</button><span>${item.qty}</span><button class="qty-btn inc-order" data-id="${item.id}">+</button></div></td><td>₹${item.rate}</td><td>₹${item.rate * item.qty}</td><td><button class="remove-item" data-id="${item.id}"><i class="fas fa-trash"></i></button></td></tr>`; }).join('');
+    totalSpan.innerText = total;
+    document.querySelectorAll('.dec-order').forEach(btn => btn.addEventListener('click', () => { const id = parseInt(btn.dataset.id); const item = (tableOrders[currentTable] || []).find(i => i.id === id); if(item) updateOrderQuantity(id, item.qty - 1); }));
+    document.querySelectorAll('.inc-order').forEach(btn => btn.addEventListener('click', () => { const id = parseInt(btn.dataset.id); const item = (tableOrders[currentTable] || []).find(i => i.id === id); if(item) updateOrderQuantity(id, item.qty + 1); }));
+    document.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', () => removeOrderItem(parseInt(btn.dataset.id))));
+  }
+
+  function renderBillHistory() {
+    const history = billHistory[currentTable] || [];
+    const container = document.getElementById('history-list');
+    if (history.length === 0) { container.innerHTML = '<div>No bills yet</div>'; return; }
+    container.innerHTML = history.map((bill, idx) => `<div class="history-item" data-idx="${idx}"><span>${bill.billNo}</span><span>₹${bill.total}</span></div>`).join('');
+    document.querySelectorAll('.history-item').forEach(item => item.addEventListener('click', () => { const bill = history[parseInt(item.dataset.idx)]; showBillDetails(bill); }));
+  }
+
+  function showBillDetails(bill) {
+    let itemsHtml = bill.items.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.rate}</td><td>₹${i.rate * i.qty}</td></tr>`).join('');
+    const html = `<div class="invoice-header"><h2>Suvarna Bar</h2><p>Table ${bill.tableNo}</p></div><div><p>${bill.billNo}</p><p>${bill.date}</p></div><table class="invoice-table"><thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${itemsHtml}</tbody></table><div class="invoice-total">Total: ₹${bill.total}</div><button class="close-modal" id="closeHistoryBill">Close</button>`;
+    document.getElementById('invoice-content').innerHTML = html;
+    document.getElementById('invoice-modal').classList.add('active');
+    document.getElementById('closeHistoryBill').onclick = () => document.getElementById('invoice-modal').classList.remove('active');
+  }
+
+  function renderGallery() {
+    let filtered = beverages.filter(b => currentFilter === 'all' || b.category === currentFilter);
+    if (searchQuery) filtered = filtered.filter(b => b.name.toLowerCase().includes(searchQuery));
+    document.getElementById('gallery-grid').innerHTML = filtered.map(d => `<div class="photo-card" data-img="${d.img}"><img class="photo-img" src="${d.img}" onerror="this.src='https://placehold.co/300x200/2c211b/c97e4a'"><div class="photo-info"><h4>${d.name}</h4><small>₹${d.rate}</small></div></div>`).join('');
+    document.querySelectorAll('.photo-card').forEach(card => card.addEventListener('click', () => { document.getElementById('lightbox-img').src = card.dataset.img; document.getElementById('lightbox').classList.add('active'); }));
+  }
+
+  function renderTableBoxes() {
+    const container = document.getElementById('tables-grid');
+    container.innerHTML = '';
+    for (let i = 1; i <= 15; i++) {
+      const orderCount = (tableOrders[i] || []).length;
+      const div = document.createElement('div');
+      div.className = `table-box ${i === currentTable ? 'active' : ''}`;
+      div.innerHTML = `<div class="table-number">Table ${i}</div><div class="table-badge">${orderCount} items</div>`;
+      div.onclick = () => { currentTable = i; document.getElementById('current-table-display').innerText = i; renderTableBoxes(); renderOrder(); renderBillHistory(); };
+      container.appendChild(div);
+    }
+  }
+
+  function loadTableData() {
+    const savedOrders = localStorage.getItem('suvarnaTableOrders');
+    if (savedOrders) tableOrders = JSON.parse(savedOrders);
+    const savedHistory = localStorage.getItem('suvarnaBillHistory');
+    if (savedHistory) billHistory = JSON.parse(savedHistory);
+  }
+
+  function saveTableData() {
+    localStorage.setItem('suvarnaTableOrders', JSON.stringify(tableOrders));
+    localStorage.setItem('suvarnaBillHistory', JSON.stringify(billHistory));
+  }
+
+  function updateAdminUI() {
+    const status = document.getElementById('admin-status-text');
+    const loginBtn = document.getElementById('admin-login-btn');
+    const logoutBtn = document.getElementById('admin-logout-btn');
+    if (isAdmin) { status.innerHTML = '👑 Admin Mode'; status.style.background = '#2e7d32'; loginBtn.style.display = 'none'; logoutBtn.style.display = 'flex'; }
+    else { status.innerHTML = '👤 User Mode'; status.style.background = '#5a3a2a'; loginBtn.style.display = 'flex'; logoutBtn.style.display = 'none'; }
+    renderInventory();
+  }
+
+  function loginAdmin() { const pwd = document.getElementById('admin-password'); if (pwd.value === ADMIN_PASSWORD) { isAdmin = true; updateAdminUI(); pwd.value = ''; alert('Admin access granted! You can now modify stock and rates.'); } else { alert('Wrong password!'); pwd.value = ''; } }
+  function logoutAdmin() { isAdmin = false; updateAdminUI(); alert('Logged out.'); }
+
+  function setFilter(cat) { currentFilter = cat; updateAllUI(); document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.filter === cat)); }
+  function updateAllUI() { renderInventory(); renderOrder(); renderGallery(); renderBillHistory(); renderTableBoxes(); renderTally(); }
+  function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); document.getElementById('clear-search').style.display = searchQuery ? 'flex' : 'none'; updateAllUI(); }
+  function clearSearch() { document.getElementById('search-input').value = ''; searchQuery = ''; document.getElementById('clear-search').style.display = 'none'; updateAllUI(); }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => setFilter(btn.dataset.filter)));
+  document.getElementById('admin-login-btn').onclick = loginAdmin;
+  document.getElementById('admin-logout-btn').onclick = logoutAdmin;
+  document.getElementById('clear-order-btn').onclick = () => { if(confirm('Clear order?')) clearCurrentOrder(); };
+  document.getElementById('generate-bill-btn').onclick = generateBill;
+  document.getElementById('search-input').addEventListener('input', handleSearch);
+  document.getElementById('clear-search').onclick = clearSearch;
+  document.getElementById('view-date-tally').onclick = () => renderTally(document.getElementById('tally-date').value || new Date().toLocaleDateString('en-CA'));
+  document.getElementById('view-month-tally').onclick = () => renderTally();
+  document.getElementById('tally-date').value = new Date().toLocaleDateString('en-CA');
+  document.getElementById('lightbox').onclick = () => document.getElementById('lightbox').classList.remove('active');
+  document.getElementById('invoice-modal').onclick = (e) => { if(e.target === document.getElementById('invoice-modal')) document.getElementById('invoice-modal').classList.remove('active'); };
+  
+  loadTableData();
+  loadStockData();
+  updateAllUI();
+  setFilter('all');
+  updateAdminUI();
+</script>
+</body>
+</html>
